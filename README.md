@@ -1,5 +1,13 @@
 # Swift Crypto
 
+## Note:
+This repo is a fork of the open-sourced [swift-crypto](https://github.com/apple/swift-crypto) project from Apple. Contributors at the Local Connectivity Lab (LCL) at the Paul G. Allen School of Computer Science and Engineering at the University of Washington made the following changes to better fit their project need.
+Since the original project is licensed under Apache License 2.0, so is this forked version and all future versions of this forked project at LCL.
+
+* export `CryptoBoringWrapper` to public API
+
+---
+
 Swift Crypto is an open-source implementation of a substantial portion of the API of [Apple CryptoKit](https://developer.apple.com/documentation/cryptokit) suitable for use on Linux platforms. It enables cross-platform or server applications with the advantages of CryptoKit.
 
 ## Using Swift Crypto
