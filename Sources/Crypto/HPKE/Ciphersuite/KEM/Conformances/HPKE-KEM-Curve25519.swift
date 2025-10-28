@@ -6,7 +6,7 @@
 // Licensed under Apache License v2.0
 //
 // See LICENSE.txt for license information
-// See CONTRIBUTORS.md for the list of SwiftCrypto project authors
+// See CONTRIBUTORS.txt for the list of SwiftCrypto project authors
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -14,11 +14,23 @@
 #if CRYPTO_IN_SWIFTPM && !CRYPTO_IN_SWIFTPM_FORCE_BUILD_API
 @_exported import CryptoKit
 #else
-import Foundation
 
+#if CRYPTOKIT_NO_ACCESS_TO_FOUNDATION
+public import SwiftSystem
+#else
+#if canImport(FoundationEssentials)
+public import FoundationEssentials
+#else
+public import Foundation
+#endif
+#endif
+
+
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
 extension Curve25519.KeyAgreement.PrivateKey: HPKEDiffieHellmanPrivateKeyGeneration {}
 
 
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
 extension Curve25519.KeyAgreement.PublicKey: HPKEDiffieHellmanPublicKey {
 	/// The type of the ephemeral private key associated with this public key.
     public typealias EphemeralPrivateKey = Curve25519.KeyAgreement.PrivateKey

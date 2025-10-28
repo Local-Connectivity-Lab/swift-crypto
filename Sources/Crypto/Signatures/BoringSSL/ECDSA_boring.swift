@@ -6,7 +6,7 @@
 // Licensed under Apache License v2.0
 //
 // See LICENSE.txt for license information
-// See CONTRIBUTORS.md for the list of SwiftCrypto project authors
+// See CONTRIBUTORS.txt for the list of SwiftCrypto project authors
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -15,10 +15,19 @@
 @_exported import CryptoKit
 #else
 @_implementationOnly import CCryptoBoringSSL
+import CryptoBoringWrapper
+#if canImport(FoundationEssentials)
+import FoundationEssentials
+#else
 import Foundation
+#endif
 
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
 extension Data {
-    init<D: DataProtocol, Curve: OpenSSLSupportedNISTCurve>(derSignature derBytes: D, over: Curve.Type = Curve.self) throws {
+    init<D: DataProtocol, Curve: OpenSSLSupportedNISTCurve>(
+        derSignature derBytes: D,
+        over: Curve.Type = Curve.self
+    ) throws {
         // BoringSSL requires a contiguous buffer of memory, so if we don't have one we need to create one.
         if derBytes.regions.count == 1 {
             self = try Data(contiguousDERBytes: derBytes.regions.first!, over: Curve.self)
@@ -28,13 +37,18 @@ extension Data {
         }
     }
 
-    init<ContiguousBuffer: ContiguousBytes, Curve: OpenSSLSupportedNISTCurve>(contiguousDERBytes derBytes: ContiguousBuffer,
-                                                                              over curve: Curve.Type = Curve.self) throws {
+    init<ContiguousBuffer: ContiguousBytes, Curve: OpenSSLSupportedNISTCurve>(
+        contiguousDERBytes derBytes: ContiguousBuffer,
+        over curve: Curve.Type = Curve.self
+    ) throws {
         let sig = try ECDSASignature(contiguousDERBytes: derBytes)
         self = try Data(rawSignature: sig, over: curve)
     }
 
-    init<Curve: OpenSSLSupportedNISTCurve>(rawSignature signature: ECDSASignature, over curve: Curve.Type = Curve.self) throws {
+    init<Curve: OpenSSLSupportedNISTCurve>(
+        rawSignature signature: ECDSASignature,
+        over curve: Curve.Type = Curve.self
+    ) throws {
         // We need to bring this into the raw representation, which is r || s as defined in https://tools.ietf.org/html/rfc4754.
         let (r, s) = signature.components
         let curveByteCount = Curve.coordinateByteCount
@@ -49,6 +63,7 @@ extension Data {
     }
 }
 
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
 extension P256.Signing.ECDSASignature {
     init<D: DataProtocol>(openSSLDERSignature derRepresentation: D) throws {
         self.rawRepresentation = try Data(derSignature: derRepresentation, over: P256.self)
@@ -59,6 +74,7 @@ extension P256.Signing.ECDSASignature {
     }
 }
 
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
 extension P256.Signing.PrivateKey {
     func openSSLSignature<D: Digest>(for digest: D) throws -> P256.Signing.ECDSASignature {
         let baseSignature = try self.impl.key.sign(digest: digest)
@@ -66,9 +82,16 @@ extension P256.Signing.PrivateKey {
     }
 }
 
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
 extension P256.Signing.PublicKey {
-    func openSSLIsValidSignature<D: Digest>(_ signature: P256.Signing.ECDSASignature, for digest: D) -> Bool {
-        guard let baseSignature = try? ECDSASignature(rawRepresentation: signature.rawRepresentation) else {
+    func openSSLIsValidSignature<D: Digest>(
+        _ signature: P256.Signing.ECDSASignature,
+        for digest: D
+    )
+        -> Bool
+    {
+        guard let baseSignature = try? ECDSASignature(rawRepresentation: signature.rawRepresentation)
+        else {
             // If we can't create a signature, it's not valid.
             return false
         }
@@ -77,6 +100,7 @@ extension P256.Signing.PublicKey {
     }
 }
 
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
 extension P384.Signing.ECDSASignature {
     init<D: DataProtocol>(openSSLDERSignature derRepresentation: D) throws {
         self.rawRepresentation = try Data(derSignature: derRepresentation, over: P384.self)
@@ -87,6 +111,7 @@ extension P384.Signing.ECDSASignature {
     }
 }
 
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
 extension P384.Signing.PrivateKey {
     func openSSLSignature<D: Digest>(for digest: D) throws -> P384.Signing.ECDSASignature {
         let baseSignature = try self.impl.key.sign(digest: digest)
@@ -94,9 +119,16 @@ extension P384.Signing.PrivateKey {
     }
 }
 
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
 extension P384.Signing.PublicKey {
-    func openSSLIsValidSignature<D: Digest>(_ signature: P384.Signing.ECDSASignature, for digest: D) -> Bool {
-        guard let baseSignature = try? ECDSASignature(rawRepresentation: signature.rawRepresentation) else {
+    func openSSLIsValidSignature<D: Digest>(
+        _ signature: P384.Signing.ECDSASignature,
+        for digest: D
+    )
+        -> Bool
+    {
+        guard let baseSignature = try? ECDSASignature(rawRepresentation: signature.rawRepresentation)
+        else {
             // If we can't create a signature, it's not valid.
             return false
         }
@@ -105,6 +137,7 @@ extension P384.Signing.PublicKey {
     }
 }
 
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
 extension P521.Signing.ECDSASignature {
     init<D: DataProtocol>(openSSLDERSignature derRepresentation: D) throws {
         self.rawRepresentation = try Data(derSignature: derRepresentation, over: P521.self)
@@ -115,6 +148,7 @@ extension P521.Signing.ECDSASignature {
     }
 }
 
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
 extension P521.Signing.PrivateKey {
     func openSSLSignature<D: Digest>(for digest: D) throws -> P521.Signing.ECDSASignature {
         let baseSignature = try self.impl.key.sign(digest: digest)
@@ -122,9 +156,16 @@ extension P521.Signing.PrivateKey {
     }
 }
 
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
 extension P521.Signing.PublicKey {
-    func openSSLIsValidSignature<D: Digest>(_ signature: P521.Signing.ECDSASignature, for digest: D) -> Bool {
-        guard let baseSignature = try? ECDSASignature(rawRepresentation: signature.rawRepresentation) else {
+    func openSSLIsValidSignature<D: Digest>(
+        _ signature: P521.Signing.ECDSASignature,
+        for digest: D
+    )
+        -> Bool
+    {
+        guard let baseSignature = try? ECDSASignature(rawRepresentation: signature.rawRepresentation)
+        else {
             // If we can't create a signature, it's not valid.
             return false
         }
@@ -132,4 +173,4 @@ extension P521.Signing.PublicKey {
         return self.impl.key.isValidSignature(baseSignature, for: digest)
     }
 }
-#endif // CRYPTO_IN_SWIFTPM && !CRYPTO_IN_SWIFTPM_FORCE_BUILD_API
+#endif  // CRYPTO_IN_SWIFTPM && !CRYPTO_IN_SWIFTPM_FORCE_BUILD_API

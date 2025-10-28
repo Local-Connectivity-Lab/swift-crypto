@@ -1,16 +1,16 @@
-/* Copyright (c) 2023, Google Inc.
- *
- * Permission to use, copy, modify, and/or distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
- *
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
- * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
- * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION
- * OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
- * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. */
+// Copyright 2023 The BoringSSL Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 #ifndef OPENSSL_HEADER_X509V3_H
 #define OPENSSL_HEADER_X509V3_H
@@ -19,6 +19,30 @@
 // expects OpenSSL easier. We have merged this header into <openssl/x509.h>.
 // However, due to conflicts, some deprecated symbols are defined here.
 #include "CCryptoBoringSSL_x509.h"
+
+
+// CRL reason constants.
+
+// TODO(davidben): These constants live here because strongswan defines
+// conflicting symbols and has been relying on them only being defined in
+// <openssl/x509v3.h>. Defining the constants in <openssl/x509.h> would break
+// strongswan, but we would also like for new code to only need
+// <openssl/x509.h>. Introduce properly namespaced versions of these constants
+// and, separately, see if we can fix strongswan to similarly avoid the
+// conflict. Between OpenSSL, strongswan, and wincrypt.h all defining these
+// constants, it seems best for everyone to just avoid them going forward.
+#define CRL_REASON_NONE (-1)
+#define CRL_REASON_UNSPECIFIED 0
+#define CRL_REASON_KEY_COMPROMISE 1
+#define CRL_REASON_CA_COMPROMISE 2
+#define CRL_REASON_AFFILIATION_CHANGED 3
+#define CRL_REASON_SUPERSEDED 4
+#define CRL_REASON_CESSATION_OF_OPERATION 5
+#define CRL_REASON_CERTIFICATE_HOLD 6
+#define CRL_REASON_REMOVE_FROM_CRL 8
+#define CRL_REASON_PRIVILEGE_WITHDRAWN 9
+#define CRL_REASON_AA_COMPROMISE 10
+
 
 // Deprecated constants.
 

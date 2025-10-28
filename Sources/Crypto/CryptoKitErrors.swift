@@ -6,7 +6,7 @@
 // Licensed under Apache License v2.0
 //
 // See LICENSE.txt for license information
-// See CONTRIBUTORS.md for the list of SwiftCrypto project authors
+// See CONTRIBUTORS.txt for the list of SwiftCrypto project authors
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -15,6 +15,7 @@
 @_exported import CryptoKit
 #else
 /// General cryptography errors used by CryptoKit.
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
 public enum CryptoKitError: Error {
     /// The key size is incorrect.
     case incorrectKeySize
@@ -33,8 +34,12 @@ public enum CryptoKitError: Error {
     case invalidParameter
 }
 
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
+extension CryptoKitError: Equatable, Hashable {}
+
 /// Errors from decoding ASN.1 content.
-public enum CryptoKitASN1Error: Error {
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
+public enum CryptoKitASN1Error: Equatable, Error, Hashable {
     /// The ASN.1 tag for this field is invalid or unsupported.
     case invalidFieldIdentifier
 
@@ -61,4 +66,59 @@ public enum CryptoKitASN1Error: Error {
     /// The string doesn’t parse as a PEM document.
     case invalidPEMDocument
 }
+
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
+enum RSAPSSSPKIErrors: Error {
+    case invalidPSSOID
+    case missingParameters
+    case incorrectHashFunction
+    case incorrectMGF
+    case missingMGFHashFunction
+    case incorrectMGFHashFunction
+    case invalidSaltLength
+}
+
+#if hasFeature(Embedded)
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
+public struct RSAPSSSPKIError: Error {
+    internal var error: RSAPSSSPKIErrors
+}
+#else
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
+struct RSAPSSSPKIError: Error {
+    internal var error: RSAPSSSPKIErrors
+}
+#endif
+
+#if hasFeature(Embedded)
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
+public enum CryptoKitMetaError: Error {
+    case cryptoKitError(underlyingError: CryptoKitError)
+    case asn1Error(underlyingError: CryptoKitASN1Error)
+    case rsapssspkiError(underlyingError: RSAPSSSPKIError)
+}
+
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
+internal func error(_ error: CryptoKitError) -> CryptoKitMetaError {
+    .cryptoKitError(underlyingError: error)
+}
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
+internal func error(_ error: CryptoKitASN1Error) -> CryptoKitMetaError {
+    .asn1Error(underlyingError: error)
+}
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
+internal func error(_ error: RSAPSSSPKIErrors) -> CryptoKitMetaError {
+    .rsapssspkiError(underlyingError: RSAPSSSPKIError(error: error))
+}
+#else /* !hasFeature(Embedded) */
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
+public typealias CryptoKitMetaError = any Error
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
+internal func error(_ error: CryptoKitError) -> CryptoKitError { error }
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
+internal func error(_ error: CryptoKitASN1Error) -> CryptoKitASN1Error { error }
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
+internal func error(_ error: RSAPSSSPKIErrors) -> RSAPSSSPKIErrors { error }
+#endif
+
 #endif

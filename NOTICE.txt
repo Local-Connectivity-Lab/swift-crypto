@@ -28,13 +28,13 @@ components that this product depends on.
 This product contains test vectors from Google's wycheproof project.
 
   * LICENSE (Apache License 2.0):
-    * https://github.com/google/wycheproof/blob/master/LICENSE
+    * https://github.com/C2SP/wycheproof/blob/31387e2cd596587c859c611027b6a44d2e2b65ff/LICENSE
   * HOMEPAGE:
     * https://github.com/google/wycheproof
 
 ---
 
-This product contains a derivation of various scripts from SwiftNIO.
+This product contains a derivation of various files from SwiftNIO.
 
   * LICENSE (Apache License 2.0):
     * https://www.apache.org/licenses/LICENSE-2.0

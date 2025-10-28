@@ -6,7 +6,7 @@
 // Licensed under Apache License v2.0
 //
 // See LICENSE.txt for license information
-// See CONTRIBUTORS.md for the list of SwiftCrypto project authors
+// See CONTRIBUTORS.txt for the list of SwiftCrypto project authors
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -118,6 +118,10 @@ size_t CCryptoBoringSSLShims_BN_bn2bin(const BIGNUM *in, void *out) {
     return CCryptoBoringSSL_BN_bn2bin(in, out);
 }
 
+int CCryptoBoringSSLShims_BN_mod(BIGNUM *rem, const BIGNUM *a, const BIGNUM *m, BN_CTX *ctx) {
+    return BN_mod(rem, a, m, ctx);
+}
+
 int CCryptoBoringSSLShims_RSA_verify(int hash_nid, const void *msg, size_t msg_len,
                                      const void *sig, size_t sig_len, RSA *rsa) {
     return CCryptoBoringSSL_RSA_verify(hash_nid, msg, msg_len, sig, sig_len, rsa);
@@ -163,4 +167,24 @@ int CCryptoBoringSSLShims_EVP_PKEY_decrypt(EVP_PKEY_CTX *ctx, void *out,
                                            size_t *out_len, const void *in,
                                            size_t in_len) {
     return CCryptoBoringSSL_EVP_PKEY_decrypt(ctx, out, out_len, in, in_len);
+}
+
+int CCryptoBoringSSLShims_EC_hash_to_curve_p256_xmd_sha256_sswu(const EC_GROUP *group, EC_POINT *out,
+                                                                const void *dst, size_t dst_len,
+                                                                const void *msg, size_t msg_len) {
+    return CCryptoBoringSSL_EC_hash_to_curve_p256_xmd_sha256_sswu(group, out, dst, dst_len, msg, msg_len);
+}
+
+int CCryptoBoringSSLShims_EC_hash_to_curve_p384_xmd_sha384_sswu(const EC_GROUP *group, EC_POINT *out,
+                                                                const void *dst, size_t dst_len,
+                                                                const void *msg, size_t msg_len) {
+    return CCryptoBoringSSL_EC_hash_to_curve_p384_xmd_sha384_sswu(group, out, dst, dst_len, msg, msg_len);
+}
+
+size_t CCryptoBoringSSLShims_EC_POINT_point2oct(const EC_GROUP *group,
+                                                const EC_POINT *point,
+                                                point_conversion_form_t form,
+                                                void *buf, size_t max_out,
+                                                BN_CTX *ctx) {
+    return CCryptoBoringSSL_EC_POINT_point2oct(group, point, form, buf, max_out, ctx);
 }

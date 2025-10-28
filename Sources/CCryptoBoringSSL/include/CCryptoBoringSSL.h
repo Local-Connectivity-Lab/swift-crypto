@@ -6,7 +6,7 @@
 // Licensed under Apache License v2.0
 //
 // See LICENSE.txt for license information
-// See CONTRIBUTORS.md for the list of SwiftCrypto project authors
+// See CONTRIBUTORS.txt for the list of SwiftCrypto project authors
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -14,6 +14,7 @@
 #ifndef C_CRYPTO_BORINGSSL_H
 #define C_CRYPTO_BORINGSSL_H
 
+#include "CCryptoBoringSSL_aead.h"
 #include "CCryptoBoringSSL_aes.h"
 #include "CCryptoBoringSSL_arm_arch.h"
 #include "CCryptoBoringSSL_asn1_mac.h"
@@ -22,6 +23,7 @@
 #include "CCryptoBoringSSL_bio.h"
 #include "CCryptoBoringSSL_blake2.h"
 #include "CCryptoBoringSSL_blowfish.h"
+#include "CCryptoBoringSSL_bn.h"
 #include "CCryptoBoringSSL_boringssl_prefix_symbols.h"
 #include "CCryptoBoringSSL_boringssl_prefix_symbols_asm.h"
 #include "CCryptoBoringSSL_cast.h"
@@ -29,6 +31,7 @@
 #include "CCryptoBoringSSL_cmac.h"
 #include "CCryptoBoringSSL_conf.h"
 #include "CCryptoBoringSSL_cpu.h"
+#include "CCryptoBoringSSL_ctrdrbg.h"
 #include "CCryptoBoringSSL_curve25519.h"
 #include "CCryptoBoringSSL_des.h"
 #include "CCryptoBoringSSL_e_os2.h"
@@ -42,6 +45,8 @@
 #include "CCryptoBoringSSL_hrss.h"
 #include "CCryptoBoringSSL_md4.h"
 #include "CCryptoBoringSSL_md5.h"
+#include "CCryptoBoringSSL_mldsa.h"
+#include "CCryptoBoringSSL_mlkem.h"
 #include "CCryptoBoringSSL_obj_mac.h"
 #include "CCryptoBoringSSL_objects.h"
 #include "CCryptoBoringSSL_opensslv.h"
@@ -58,5 +63,6 @@
 #include "CCryptoBoringSSL_siphash.h"
 #include "CCryptoBoringSSL_trust_token.h"
 #include "CCryptoBoringSSL_x509v3.h"
+#include "CCryptoBoringSSL_xwing.h"
 
 #endif  // C_CRYPTO_BORINGSSL_H

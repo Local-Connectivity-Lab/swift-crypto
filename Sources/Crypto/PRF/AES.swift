@@ -6,7 +6,7 @@
 // Licensed under Apache License v2.0
 //
 // See LICENSE.txt for license information
-// See CONTRIBUTORS.md for the list of SwiftCrypto project authors
+// See CONTRIBUTORS.txt for the list of SwiftCrypto project authors
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -15,10 +15,12 @@
 @_exported import CryptoKit
 #else
 /// A container for Advanced Encryption Standard (AES) ciphers.
-public enum AES {
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
+public enum AES: Sendable {
     static let blockSizeByteCount = 16
 }
 
+@available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, macCatalyst 13, visionOS 1.0, *)
 extension AES {
     static func isValidKey(_ key: SymmetricKey) -> Bool {
         switch key.bitCount {

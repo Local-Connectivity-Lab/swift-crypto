@@ -6,7 +6,7 @@
 // Licensed under Apache License v2.0
 //
 // See LICENSE.txt for license information
-// See CONTRIBUTORS.md for the list of SwiftCrypto project authors
+// See CONTRIBUTORS.txt for the list of SwiftCrypto project authors
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -98,7 +98,7 @@ final class GeneralizedTimeTests: XCTestCase {
             let result = try? ASN1.GeneralizedTime(asn1Encoded: serialized)
             XCTAssertEqual(result, expectedResult)
 
-            if let expectedResult = expectedResult {
+            if let expectedResult {
                 try self.assertRoundTrips(expectedResult)
             }
         }

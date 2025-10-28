@@ -6,7 +6,7 @@
 ## Licensed under Apache License v2.0
 ##
 ## See LICENSE.txt for license information
-## See CONTRIBUTORS.md for the list of SwiftCrypto project authors
+## See CONTRIBUTORS.txt for the list of SwiftCrypto project authors
 ##
 ## SPDX-License-Identifier: Apache-2.0
 ##
@@ -36,12 +36,15 @@ add_library(Crypto
   "ASN1/PKCS8PrivateKey.swift"
   "ASN1/SEC1PrivateKey.swift"
   "ASN1/SubjectPublicKeyInfo.swift"
+  "CryptoError_boring.swift"
   "CryptoKitErrors.swift"
   "Digests/BoringSSL/Digest_boring.swift"
   "Digests/Digest.swift"
   "Digests/Digests.swift"
   "Digests/HashFunctions.swift"
   "Digests/HashFunctions_SHA2.swift"
+  "Digests/HashFunctions_SHA3.swift"
+  "Digests/XKCP/Digest_xkcp.swift"
   "HPKE/Ciphersuite/HPKE-AEAD.swift"
   "HPKE/Ciphersuite/HPKE-Ciphersuite.swift"
   "HPKE/Ciphersuite/HPKE-KDF.swift"
@@ -59,16 +62,21 @@ add_library(Crypto
   "HPKE/Modes/HPKE-Modes.swift"
   "Insecure/Insecure.swift"
   "Insecure/Insecure_HashFunctions.swift"
+  "KEM/BoringSSL/MLKEM_boring.swift"
+  "KEM/BoringSSL/MLKEM_wrapper.swift"
+  "KEM/BoringSSL/XWing_boring.swift"
+  "KEM/KEM-Errors.swift"
   "KEM/KEM.swift"
+  "KEM/MLKEM.swift"
+  "KEM/XWing.swift"
   "Key Agreement/BoringSSL/ECDH_boring.swift"
   "Key Agreement/DH.swift"
   "Key Agreement/ECDH.swift"
+  "Key Derivation/ANSIx963.swift"
   "Key Derivation/HKDF.swift"
   "Key Wrapping/AESWrap.swift"
   "Key Wrapping/BoringSSL/AESWrap_boring.swift"
   "Keys/EC/BoringSSL/Ed25519_boring.swift"
-  "Keys/EC/BoringSSL/EllipticCurvePoint_boring.swift"
-  "Keys/EC/BoringSSL/EllipticCurve_boring.swift"
   "Keys/EC/BoringSSL/NISTCurvesKeys_boring.swift"
   "Keys/EC/BoringSSL/X25519Keys_boring.swift"
   "Keys/EC/Curve25519.swift"
@@ -83,24 +91,27 @@ add_library(Crypto
   "Signatures/BoringSSL/ECDSASignature_boring.swift"
   "Signatures/BoringSSL/ECDSA_boring.swift"
   "Signatures/BoringSSL/EdDSA_boring.swift"
+  "Signatures/BoringSSL/MLDSA_boring.swift"
+  "Signatures/BoringSSL/MLDSA_wrapper.swift"
   "Signatures/ECDSA.swift"
   "Signatures/Ed25519.swift"
+  "Signatures/MLDSA.swift"
   "Signatures/Signature.swift"
-  "Util/BoringSSL/ArbitraryPrecisionInteger_boring.swift"
   "Util/BoringSSL/CryptoKitErrors_boring.swift"
-  "Util/BoringSSL/FiniteFieldArithmeticContext_boring.swift"
+  "Util/BoringSSL/Optional+withUnsafeBytes_boring.swift"
   "Util/BoringSSL/RNG_boring.swift"
   "Util/BoringSSL/SafeCompare_boring.swift"
   "Util/BoringSSL/Zeroization_boring.swift"
   "Util/PrettyBytes.swift"
   "Util/SafeCompare.swift"
   "Util/SecureBytes.swift"
-  "Util/Zeroization.swift")
+  "Util/Zeroization.swift"
+)
 
 target_compile_definitions(Crypto PRIVATE
   "$<$<COMPILE_LANGUAGE:Swift>:CRYPTO_IN_SWIFTPM>")
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux" OR CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "Android" OR CMAKE_SYSTEM_NAME STREQUAL "WASI")
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   target_compile_definitions(Crypto PRIVATE
     "$<$<COMPILE_LANGUAGE:Swift>:CRYPTO_IN_SWIFTPM_FORCE_BUILD_API>")
 endif()
@@ -108,13 +119,18 @@ endif()
 target_include_directories(Crypto PRIVATE
   $<TARGET_PROPERTY:CCryptoBoringSSL,INCLUDE_DIRECTORIES>
   $<TARGET_PROPERTY:CCryptoBoringSSLShims,INCLUDE_DIRECTORIES>
-  $<TARGET_PROPERTY:CryptoBoringWrapper,INCLUDE_DIRECTORIES>)
+  $<TARGET_PROPERTY:CryptoBoringWrapper,INCLUDE_DIRECTORIES>
+  $<TARGET_PROPERTY:CXKCP,INCLUDE_DIRECTORIES>
+  $<TARGET_PROPERTY:CXKCPShims,INCLUDE_DIRECTORIES>)
 target_link_libraries(Crypto PUBLIC
   $<$<NOT:$<PLATFORM_ID:Darwin>>:dispatch>
   $<$<NOT:$<PLATFORM_ID:Darwin>>:Foundation>
   CCryptoBoringSSL
   CCryptoBoringSSLShims
-  CryptoBoringWrapper)
+  CryptoBoringWrapper
+  CXKCP
+  CXKCPShims)
+target_compile_options(Crypto PRIVATE ${SWIFT_CRYPTO_COMPILE_OPTIONS})
 set_target_properties(Crypto PROPERTIES
   INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_Swift_MODULE_DIRECTORY})
 

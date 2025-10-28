@@ -6,7 +6,7 @@
 // Licensed under Apache License v2.0
 //
 // See LICENSE.txt for license information
-// See CONTRIBUTORS.md for the list of SwiftCrypto project authors
+// See CONTRIBUTORS.txt for the list of SwiftCrypto project authors
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -57,7 +57,7 @@ class Ed25519Tests: XCTestCase {
 
         let signatureOnContiguous = try orFail { try privateKey.signature(for: someContiguousData) }
         let signatureOnDiscontiguous = try orFail { try privateKey.signature(for: someDiscontiguousData) }
-        #if !(canImport(Darwin))
+        #if !canImport(Darwin)
         XCTAssertEqual(signatureOnContiguous, signatureOnDiscontiguous)
         #endif
 
@@ -105,7 +105,7 @@ class Ed25519Tests: XCTestCase {
         }
     }
 
-    func testGroup(group: Ed25519TestGroup, file: StaticString = #file, line: UInt = #line) throws {
+    func testGroup(group: Ed25519TestGroup, file: StaticString = #filePath, line: UInt = #line) throws {
         let keyBytes = try orFail { try Array(hexString: group.publicKey.pk) }
         let key = try orFail { try Curve25519.Signing.PublicKey(rawRepresentation: keyBytes) }
 

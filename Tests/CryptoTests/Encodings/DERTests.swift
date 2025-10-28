@@ -6,7 +6,7 @@
 // Licensed under Apache License v2.0
 //
 // See LICENSE.txt for license information
-// See CONTRIBUTORS.md for the list of SwiftCrypto project authors
+// See CONTRIBUTORS.txt for the list of SwiftCrypto project authors
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -49,7 +49,7 @@ class DERTests: XCTestCase {
     }
 
     func randomBytes(count: Int) -> [UInt8] {
-        #if canImport(Darwin) || os(Linux) || os(Android) || os(Windows)
+        #if canImport(Darwin) || os(Linux) || os(Android) || os(Windows) || os(FreeBSD)
         var rng = SystemRandomNumberGenerator()
         return (0..<count).map { _ in rng.next() }
         #else
